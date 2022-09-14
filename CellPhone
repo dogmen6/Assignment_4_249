@@ -1,0 +1,178 @@
+//------------------------------------------------------------------------ 
+//Assignment 4
+//COMP 249
+//Part: 2
+//------------------------------------------------------------------------
+
+import java.util.Scanner;
+import java.util.InputMismatchException;
+import java.util.Objects;
+
+
+public class CellPhone {
+
+	private long serialNum; //unique serial number
+	private String brand; //assume to always be one words
+	private int year; //indicates manufacturing year
+	private double price;
+	
+	/**
+	 * This is the default CellPhone constructor
+	 */
+	public CellPhone() {
+		
+	}
+	
+	
+	/**
+	 * This is the parameterized constructor
+	 * @param serialNum This is the serial number
+	 * @param brand This is the brand of the cellphone
+	 * @param year This is the manufacturing year
+	 * @param price This is the price of the cellphone
+	 * */
+	public CellPhone (long serialNum, String brand, int year, double price) {
+		this.serialNum = serialNum;
+		this.brand = brand;
+		this.year = year;
+		this.price = price;
+	}
+	
+	
+	/**
+	 * This is the copy constructor that takes two parameters
+	 * @param CellPhone This is the object cellphone
+	 * @param serialNum This is for the exception of the serial number
+	 * */
+	public CellPhone(CellPhone CellPhone, long serialNum) {
+		this.serialNum = serialNum;
+		this.brand = CellPhone.brand;
+		this.year = CellPhone.year;
+		this.price = CellPhone.price;
+	}
+	
+	
+	/**
+	 * This is the clone method which prompts the user to enter a new serial number, then 
+	 * creates and returns a clone of the calling object with the exception of the serial number
+	 * 
+	 * */
+	public CellPhone clone() {
+		
+		boolean valid = false; 
+		long OtherSerialNum = 0;
+		
+		
+		Scanner scan = new Scanner (System.in);
+		
+		while(!valid) {
+			try {
+				System.out.print("\nPlease enter a new serial number: ");
+				OtherSerialNum = scan.nextLong();
+				
+				valid = true;
+			}
+			
+			catch(InputMismatchException IME) {
+				System.out.print("\nThe enter serial number is not valid. Please enter a new one: ");
+				OtherSerialNum = scan.nextLong();
+			}
+		}
+		
+		return new CellPhone(this, OtherSerialNum);
+		
+	}
+
+	/**
+	 * This is the getter method for the serial number
+	 * @return serialNum This returns the serial number
+	 * */
+	public long getSerialNum() {
+		return serialNum;
+	}
+
+	/**
+	 * This is the setter method for the serial number
+	 * @param serialNum The serial number
+	 * */
+	public void setSerialNum(long serialNum) {
+		this.serialNum = serialNum;
+	}
+
+	/**
+	 * This is the getter method for the brand
+	 * @return This returns the brand of the cellphone
+	 * */
+	public String getBrand() {
+		return brand;
+	}
+
+	/**
+	 * This is the setter method for the brand
+	 * @param brand The brand of the cellphone
+	 * */
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+
+	/**
+	 * This is the getter method for the year of manufacturing
+	 * @return This returns the year of manufacturing
+	 * */
+	public int getYear() {
+		return year;
+	}
+
+	/**
+	 * This is the setter method for the year of manufacturing
+	 * @param year The year of manufacture
+	 * */
+	public void setYear(int year) {
+		this.year = year;
+	}
+
+	/**
+	 * This is the getter method for the price
+	 * @return This returns the price of the phone
+	 * */
+	public double getPrice() {
+		return price;
+	}
+
+	/**
+	 * This is the setter method for the price
+	 * @param price The price of the cellphone
+	 * */
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+
+	/**
+	 * This method checks of two objects are equal; same attributes except for serial number
+	 * @param object This is an object to check equality
+	 * @return This returns a boolean value about the equality of two cellphones
+	 * */
+	@Override
+	public boolean equals(Object object) {
+		if (this == object)
+			return true;
+		
+		if (object == null || getClass() != object.getClass())
+			return false;
+		
+	
+		CellPhone other = (CellPhone) object;
+		return Objects.equals(brand, other.brand)
+				&& Double.doubleToLongBits(price) == Double.doubleToLongBits(other.price) && year == other.year;
+	}
+	/**
+	 * This is a toString method 
+	 * @return returns a string containing details about the cellphone
+	 * */
+	@Override
+	public String toString() {
+		return "[" + serialNum + ": " + brand + " " + price + "$ " + year + "]";
+	}
+	
+}
