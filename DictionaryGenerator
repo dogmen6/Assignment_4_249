@@ -1,0 +1,237 @@
+//------------------------------------------------------------------------ 
+//Assignment 4
+//COMP 249
+//Part: 1
+//------------------------------------------------------------------------
+
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.io.PrintWriter;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+
+
+/**
+ * General information:
+ * This is a program that will take a text file as input and generate 
+ * a sub-dictionary containing all the words in the text and will print
+ * the number of entries of the text based on specific rules.
+ * 
+ * COMP249
+ * 
+ * */
+
+
+public class SubDictionaryDriver {
+	
+	/** 
+	 * This method creates takes a String as input, which represents a file name and the method Generator then opens the selected file and scans the words. 
+	 * The punctuation is then removed, as well as numbers and symbols such as !, ?, ;, etc..
+	 * @param inputFile This is the variable that takes the input File for which the sub-dictionary will be generated
+	 * @return ORDERED This returns the ArrayList that contains the ordered words
+	 */
+	
+	public static ArrayList <String> Generator (String inputFile){
+		
+		Scanner scan = null;
+//		Scanner key = new Scanner (System.in);
+		
+		String word;
+		
+		ArrayList <String> WORDS = new ArrayList <String> ();
+		
+		ArrayList <String> ORDERED = new ArrayList <String> ();
+		
+		try {
+			scan = new Scanner (new FileInputStream(inputFile));
+		}
+		
+		catch(FileNotFoundException e) {
+			System.out.println("The input file " + inputFile + " was not found or could not be opened.");
+			System.exit(0);
+		}
+		
+		
+		while(scan.hasNext()) {
+			WORDS.add(scan.next().toUpperCase());
+		}
+		
+		for(int i = 0; i < WORDS.size(); i++) {
+			
+			word = WORDS.get(i);
+			//word = word.toUpperCase();
+			
+			if(word.contains("?") || word.contains(":") || word.contains(".") || word.contains("=") || word.contains(";") || word.contains("!") || (word.indexOf(',') != -1)) {
+				word = word.substring(0, (word.length()-1));
+			}
+			
+			if(word.contains("'")) {
+				word = word.substring(0, (word.length()-2));
+			}
+			
+			WORDS.set(i, word);
+			
+			if(word.contains("1") || word.contains("2")||word.contains("3") || word.contains("4") ||
+					word.contains("5") || word.contains("6")|| word.contains("7")|| word.contains("8") ||
+					word.contains("9") || word.contains("0") ) {
+				WORDS.remove(i);
+			}
+			
+			if(word.contains("=")) {
+				WORDS.remove(i);
+			}
+			
+			if(word.length() == 1 && !(word.equals("A") || (word.equals("I")))) {
+				WORDS.remove(i);
+			}
+			
+			WORDS.trimToSize();
+			
+		}
+		
+		ORDERED = AlphaOrder(WORDS);
+		
+		
+		scan.close();
+		return ORDERED;
+	}
+	
+	
+	/** 
+	 * This method takes an ArrayList and prints its content in a .txt file
+	 * @param ArrayInput This is the alphabetically sorted Array
+	 */
+	
+	public static void OUTPUT (ArrayList <String> ArrayInput) {
+		
+		PrintWriter pw = null;
+		Scanner key = new Scanner (System.in);
+		
+		System.out.print("Please enter the name of the output file: ");
+		String output = key.nextLine();
+		
+		
+		try {
+			pw = new PrintWriter (new FileOutputStream (output));
+		}
+		
+		catch(FileNotFoundException FNFE) {
+			System.out.println("The output file could not be created.");
+			System.exit(0);
+		}
+		
+		pw.println("The sub-dictionary of the input file has " + ArrayInput.size() + " entries.\n");
+		
+		String smt = "A";
+			for(String wording : ArrayInput) {
+				if (wording.equals(ArrayInput.get(0))) {
+					pw.println(ArrayInput.get(0) + "\n= =");
+				}
+				
+				else {
+					if (wording.substring(0, 1).equals(smt)) {
+						pw.println(wording);
+					}
+					
+					else {
+						pw.println("\n" + wording.substring(0,1) + "\n= =\n" + wording);
+					}
+				}
+				
+				smt = wording.substring(0, 1);
+				
+			}
+			
+			System.out.println("The output file has been created.");
+			pw.close();
+		
+	}
+	
+	/** 
+	 * This method takes an ArrayList object of type String and alphabetically sorts it
+	 * @param random This is the variable that takes each word of the ordered ArrayList
+	 * @return ORDERED2 It is the ArrayList that is sorted in alphabetical order
+	 */
+	
+	public static ArrayList <String> AlphaOrder (ArrayList <String> random){
+		ArrayList <String> ORDERED2 = new ArrayList <String> ();
+		
+		for(String MOT : random) {
+			String abcd;
+			abcd = MOT.toUpperCase();
+			if(abcd.indexOf(',') != -1) {
+				abcd = abcd.substring(0, (MOT.length() - 1 ));
+			}
+			
+			if(ORDERED2.size() != (0)) {
+				for(int j = 0 ; j<ORDERED2.size(); j++) {
+					if(MOT.contains("=")) {
+						break;
+					}
+					
+					String TEMP = ORDERED2.get(j);
+					
+					if(MOT.equals(TEMP)) {
+						break;
+					}
+					
+					else if(TEMP.compareTo(MOT) < 0) {
+						
+						if(j+1 == (ORDERED2.size())) {
+							ORDERED2.add(MOT);
+							break;
+						}
+						continue;
+					}
+					
+					else if(TEMP.compareTo(MOT) > 0) {
+						ORDERED2.add(j,MOT);
+						break;
+					}
+					else {
+						break;
+					}
+					
+				}
+			}
+			else {
+				ORDERED2.add(MOT);
+			}
+		}
+		return ORDERED2;
+	}
+	
+	
+	/**
+	 * The main method is what calls the method to generate the sub-dictionnary and it also
+	 * prompts the user to enter the input file name and the output file name.
+	 * @param args = command-line of the arguments as an array
+	 * */
+	
+	public static void main(String[] args) {
+		
+		Scanner keyboard = new Scanner (System.in);
+		String FileIn = null;
+		ArrayList <String> WORDS = new ArrayList <String> ();
+		
+		
+		System.out.println("Welcome to the Sub-Dictionary Generator!");
+		
+		System.out.print("Please enter the name of the input file: ");
+		FileIn = keyboard.nextLine();
+		
+		WORDS = Generator (FileIn);
+		
+		OUTPUT(WORDS);
+		
+		keyboard.close();
+		
+		System.out.println("\nThank you for using the program!");
+		
+		
+
+	}
+
+}
