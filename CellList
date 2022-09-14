@@ -1,0 +1,393 @@
+//------------------------------------------------------------------------ 
+//Assignment 4
+//COMP 249
+//Part: 2
+//------------------------------------------------------------------------
+
+import java.util.NoSuchElementException;
+
+
+public class CellList{
+
+
+	public class CellNode{
+		private CellPhone cellphone;
+		private CellNode nextnode;
+		
+		/**
+		 * Privacy leak: CellNode class is available for direct use anywhere in the CellList class, but it is not available outside that class.
+		 **/
+		
+		/**
+		 * Default constructor which assigns both attributes to null
+		 * */
+		public CellNode() {
+			this.cellphone = null;
+			this.nextnode = null;
+		}
+		
+		/**
+		 * Parameterized constructor that takes as parameter a CellPhone and a CellNode
+		 * @param cellphone This is a cellphone object
+		 * @param nextnode This is the pointer to the next Node object
+		 */
+		public CellNode(CellPhone cellphone, CellNode nextnode) {
+			this.cellphone = cellphone;
+			this.nextnode = nextnode;
+		}
+		
+		/**
+		 * This is the copy constructor that creates a copy of a CellNode
+		 * @param copy This is the copy of a CellNode
+		 */
+		
+		public CellNode(CellNode copy) {
+			this.cellphone = copy.cellphone;
+			this.nextnode = copy.nextnode;
+		}
+		
+		/**
+		 * This is a clone constructor. It clones a CellNode object
+		 */
+		
+		public CellNode clone() {
+			return new CellNode(this);
+		}
+		
+		/**
+		 * This is a Cellphone accessor method
+		 * @return cellphone
+		 */
+		public CellPhone getCellphone() {
+			return cellphone;
+		}
+		
+		/**
+		 * This is a Cellphone mutator method
+		 * @param cellphone This is the cellphone that replaces the old one
+		 */
+		public void setCellphone(CellPhone cellphone) {
+			this.cellphone = cellphone;
+		}
+		
+		/**
+		 * CellNode getter method
+		 * @return nextnode This is the next node pointer that points to the next object 
+		 */
+
+		public CellNode getNextnode() {
+			return nextnode;
+		}
+		
+		/**
+		 * CellNode setter method
+		 * @param nextnode This is the next node pointer that points to the next object 
+		 */
+
+		public void setNextnode(CellNode nextnode) {
+			this.nextnode = nextnode;
+		}	
+		
+	}
+	
+	private CellNode head;
+	private int size;
+	
+	/**
+	 * This is the default constructor
+	 */
+	public CellList() {
+		head = null;
+		size = 0;
+	}
+	
+	/**
+	 * Copy constructor which accepts a CellList obj and creates a copy of it
+	 * @param copyCellList This is the copied list
+	 * */
+	public CellList(CellList copyCellList) {
+		
+		CellNode smt_node = copyCellList.head;
+		
+		while(smt_node != null) {
+			
+			addToStart(smt_node.cellphone);
+			smt_node = smt_node.nextnode;
+			size = size++;
+		}
+	
+	}
+	
+	/**
+	 * addToStart method which accepts one parameter
+	 * @param cellphone This is the CellPhone that needs to be added at the start of the list
+	 */
+	public void addToStart(CellPhone cellphone) {
+		head = new CellNode(cellphone, head);
+		size++;
+	}
+	
+	
+	/**
+	 * This is the insertAtIndex method which inserts a CellPhone at a specific index
+	 * @param cellPhone This is a cellphone object
+	 * @param index This is the position where the CellPhone object should be inserted
+	 */
+		public void insertAtIndex(CellPhone cellPhone, int index) {
+			if (index > size -1 || index < 0)
+				{
+					System.out.println("ERROR: Given index is out of range! Program will terminate. \n");
+					throw new NoSuchElementException();
+				}
+			
+			else {
+				if(size == 0) {
+					addToStart(cellPhone);
+				}
+				
+				if(index == 0) {
+					addToStart(cellPhone);
+					size++;
+					return;
+				}
+				
+				CellNode prev_node = head;
+				CellNode node = head.nextnode;
+				
+				int i = 1;
+				CellNode temp = new CellNode(cellPhone, null);
+				
+				while(index != i) {
+					prev_node = prev_node.nextnode;
+					node = node.nextnode;
+					i++;
+				}
+				
+				prev_node = temp;
+				temp.nextnode = node;
+				size++;
+				
+			}
+				
+		}
+	
+	
+	/***
+	 * This is the deleteFromIndex method which delete the object at a certain index
+	 * @param index This is the position where the object should be deleted
+	 */
+	
+	public void deleteFromIndex(int index) {
+		if (index < 0 || index > size - 1) {
+			System.out.println("ERROR: Given index is out of range! Program will terminate. \n");
+			throw new NoSuchElementException();
+		}
+		
+		int i = 0;
+		CellNode prev_node = head;
+		CellNode node = head.nextnode;
+		
+		while(index!= i) {
+			prev_node = prev_node.nextnode;
+			node = node.nextnode;
+			i++;
+		}
+		
+		prev_node.nextnode = prev_node.nextnode;
+		size--;
+		
+	}
+
+	
+	/**
+	 * This is the deleteFromStart method which deletes the first object of the list
+	 */
+	public void deleteFromStart() {
+		
+		if(size == 0) {
+			System.out.println("No elements to delete");
+		}
+		if(size == 1) {
+			head = null;
+			size = 1;
+		}
+		
+		else {
+			head = head.nextnode;
+			size--;
+		}
+		
+		
+	}
+
+	 /**
+	  * This is the replaceAtIndex method which replaces a CellPhone object to another one at a specific index
+	  * @param cellPhone This is the cellPhone that should be replaced
+	  * @param index This is the index where the cellPhone should be replaced
+	  */
+	 public void replaceAtIndex(CellPhone cellPhone, int index) {
+	        //Test whether index is valid or not.
+	        if (index < 0 || index > size - 1) {
+	            System.out.println("Invalid index.");
+	            
+	            return;
+	        }
+	       if(index == 0) {
+	    	   addToStart(cellPhone);
+	       }
+	       
+	       else {
+	    	   
+	    	   CellNode node = head;
+	    	   for(int i = 0; i < index; i++) {
+	    		   node = node.nextnode;
+	    	   }
+	    	   
+	    	   node.cellphone = cellPhone;
+	    	   
+	       }
+	    }
+	
+	 /**
+	  * This is the find method which accepts a long attribute as a parameter. This method search for a specific CellNode in the list.
+	  * @param serialNum This is the serial number of the CellPhone that wants to be found in the list
+	  * @return node.clone() This is the clone of the Object we found in the list
+ 	  */
+	public CellNode find(long serialNum) {
+		boolean found = false;
+		int count =1;
+		CellNode node = head;
+		
+		while (node != null) {
+			if(node.cellphone.getSerialNum() == serialNum) {
+				found = true;
+				break;
+			}
+			
+			
+			node = node.nextnode;
+			count++;
+			
+		}
+		
+		if (found == true) {
+			System.out.println("Number of iterations: " + count);
+			return node.clone();
+		}
+		
+		else {
+			return null;
+		}
+	}
+	
+	/**
+	 * This is the contains method which verifies is the list contains a specific serial number
+	 * @param serialnumber This is the serial number of the cellphone
+	 * @return boolean The method returns true if the list contains the serial number and false otherwise
+	 */
+	public boolean contains(long serialnumber) {
+		if(find(serialnumber) == null) {
+			return false;
+			}
+		return true;
+	}
+	
+	/**
+	 * This is the showContents method which shows the contents of the list
+	 */
+	public void showContents() {
+		
+		if(head != null) {
+			
+			int count = 0;
+			CellNode presentnode = head;
+			
+		System.out.println("The current size of the list is " + size + ". Here are the contents of the list");
+		System.out.println("===============================================================================");
+		
+		while(presentnode != null) {
+			if(count %3 == 0 && count != 0) {
+				System.out.println();
+			}
+			
+			System.out.print(presentnode.cellphone);
+			presentnode = presentnode.nextnode;
+			System.out.print("--->");
+			count++;
+		}
+		System.out.println(" X");
+		}
+		else {
+			System.out.println("No list to display");
+		}
+	}
+	
+	
+	/**
+	 * This is the equals method which check for equality between two cellLists
+	 * @param cellList this is the cellList passed as parameter
+	 * @return true if the two cellLists are equal and false otherwise
+	 */
+	public boolean equals(CellList cellList) {
+	
+		if(this == cellList) {
+			return true;
+		}
+		
+		if(cellList == null || this.getClass() != cellList.getClass()) {
+			return false;
+		}
+		
+		else {
+			CellList otherList = (CellList) cellList;
+			
+			CellNode node =head;
+			CellNode otherNode = otherList.head;
+			
+			
+			boolean is_equal = true;
+			
+			if(otherList.size != this.size) {
+				is_equal = false;
+			}
+			
+			else {
+				while(node != null) {
+					if(!node.cellphone.equals(otherNode.cellphone)) {
+						is_equal = false;
+					}
+					
+					node = node.nextnode;
+					otherNode = otherNode.nextnode;
+				}
+			}
+			return is_equal;
+		}
+		
+		
+	}
+	
+	/**
+	 * This is the hasDuplicateItems method which checks if the list have duplicate items
+	 * @param cellPhone this is the cellPhone that is being verified
+	 * @return true if the list has duplicate items and false otherwise
+	 */
+	
+	public boolean hasDuplicateItems(CellPhone cellPhone) {
+        
+        boolean hasDuplicate = false;
+        CellNode currentNode = head;
+        while (currentNode != null) {
+            
+            if (currentNode.cellphone.equals(cellPhone)) {
+                hasDuplicate = true;
+                break;
+            }
+            currentNode = currentNode.nextnode;
+        }
+        return hasDuplicate;
+    }
+
+	
+	
+}
