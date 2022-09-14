@@ -1,0 +1,392 @@
+//------------------------------------------------------------------------ 
+//Assignment 4
+//COMP 249
+//Part: 2
+//------------------------------------------------------------------------
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+/**
+ * General information:
+ * This is a program that will take a text file as input and test multiple methods from the CellPhone, the CellList and the CellListUtilization classes.
+ * 
+ * COMP249
+ * 
+ * */
+
+public class CellListUtilization {
+	
+	/**
+	 * The main method is what calls the method to test the CellPhone and CellList classes and it also
+	 * prompts the user to enter the input file name.
+	 * @param args = command-line of the arguments as an array
+	 * */
+
+	public static void main(String[] args) {
+		 
+		CellList CL1 = new CellList();
+
+	    CellList CL2 = new CellList();
+	    
+	    Scanner scan = null;
+	    
+	    String input_file = "Cell_Info.txt";
+
+	    try {
+            scan = new Scanner(new FileInputStream(input_file));
+
+        } 
+	    
+	    catch (FileNotFoundException e) {
+            System.out.println("File " + input_file + " cannot be found. The system will be closed");
+           // e.printStackTrace();
+            System.exit(0);
+        }
+	    
+	    while(scan.hasNextLine()) {
+	    	long serialNum = scan.nextLong();
+	    	String brand = scan.next();
+	    	double price = scan.nextDouble();
+	    	int year = scan.nextInt();
+	    	
+	    	 CellPhone newPHONE = new CellPhone(serialNum, brand, year, price);
+	    	 
+	    	 if(!CL1.hasDuplicateItems(newPHONE)) {
+	    		 CL1.addToStart(newPHONE);
+	    	 }
+	    	 
+	    	 else {
+	    		 CL2.addToStart(newPHONE);
+	    	 }
+	    	
+	    	
+	    }
+	    
+	    System.out.println("*************************************************************");
+	    System.out.println("*** WELCOME TO OUR CELL LIST UTILIZATION PROGRAM***");
+	    System.out.println("*************************************************************");
+	    
+	    
+	 
+	    display(CL1, "List 1 ");
+	    display(CL2, "List 2 ");
+        
+	    System.out.println("\n----------------------------------------------------------------------------------------------------\n");
+        
+     // Prompt the user to enter a few serial number to check
+        System.out.print("Enter a first serial number to check: ");
+        Scanner sc = new Scanner(System.in);
+        long serialNumByUser1 = sc.nextLong();
+
+        // Test findItem() method
+        find_item_serial(serialNumByUser1, CL1);
+        
+        System.out.print("Enter a second serial number to check: ");
+        long serialNumByUser2 = sc.nextLong();
+
+        find_item_serial(serialNumByUser2, CL1);
+        
+        System.out.print("Enter a third serial number to check: ");
+        long serialNumByUser3 = sc.nextLong();
+
+        find_item_serial(serialNumByUser3, CL1);
+        
+        CellPhone NewCellPhone = new CellPhone(1234567, "Apple Iphone Xs", 2016, 867.23);
+            
+        CellList CL3 = new CellList(CL2);
+        System.out.println("A third Cell List has been created!");
+        display(CL3, "List 3");
+        
+        
+        System.out.println();
+        System.out.println("----------------------------------------------------------------------------------------------------"); 
+        System.out.println("TESTING OF THE CELLLIST CLASS (CONSTRUCTORS & METHODS)");
+        System.out.println("----------------------------------------------------------------------------------------------------"); 
+        System.out.println();
+        System.out.println("Testing Equal Method between Cell List 2 and Cell list 3 before testing different methods on Cell List 2!");
+        equal_test(CL2, CL3);
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        System.out.println("********************************************************************************************************");
+        System.out.println("\n----------------------------------------------------------------------------------------------------\n");
+        add(CL2, NewCellPhone); 
+        System.out.println("Tested on Cell List 2!");
+        display(CL2, "List 2 ");
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        System.out.println("********************************************************************************************************");
+
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        deleteIndex(CL2, NewCellPhone); 
+        System.out.println("Tested on Cell List 2!");
+        display(CL2, "List 2 ");
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        System.out.println("********************************************************************************************************");
+
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        deleteStart(CL2, NewCellPhone); 
+        System.out.println("Tested on Cell List 2!");
+        display(CL2, "List 2 ");
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        System.out.println("********************************************************************************************************");
+
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        replace_index(CL1, NewCellPhone,5); 
+        System.out.println("Tested on Cell List 1!");
+        display(CL1, "List 1 ");
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        System.out.println("********************************************************************************************************");
+
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        System.out.println("The new cell phone must be added to the list first: ");
+        add(CL1, NewCellPhone); 
+        System.out.println("Tested on Cell List 1!");
+        display(CL1, "List 1 ");
+        
+        System.out.println("        ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ");
+        
+        find_method(CL1, NewCellPhone); 
+        System.out.println("Tested on Cell List 1!");
+        display(CL1, "List 1 ");
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        System.out.println("********************************************************************************************************");
+
+        System.out.println("\n----------------------------------------------------------------------------------------------------\n"); 
+        System.out.println("Testing Equal Method between Cell List 2 and Cell list 3 after testing different methods on Cell List 2!");
+        equal_test(CL2, CL3);
+        
+        System.out.println("\n----------------------------------------------------------------------------------------------------\n");
+        
+        System.out.println();
+
+        
+        System.out.println("\n----------------------------------------------------------------------------------------------------\n");
+        
+        replace_index(CL1, NewCellPhone, 5);
+        
+        System.out.println("\n----------------------------------------------------------------------------------------------------\n");
+
+        
+        equal_test(CL1, CL2);
+        
+        System.out.println("\n----------------------------------------------------------------------------------------------------\n");
+
+        System.out.println("EQUAL TEST BETWEEN CELL LIST 2 AND CELL LIST 3");
+        display(CL2, "List 2");
+        display(CL3, "List 3");
+        equal_test(CL2, CL3);
+        
+        System.out.println("\n----------------------------------------------------------------------------------------------------\n");
+
+        
+        System.out.println("\nTESTING ADDTOSTART METHOD");
+        add(CL2, NewCellPhone);
+        
+        System.out.println("\nEqual Test between cell list 2 and cell list 3");
+        display(CL2, "List 2");
+        display(CL3, "List 3");
+        equal_test(CL2, CL3);
+        
+        System.out.println("\n----------------------------------------------------------------------------------------------------\n");
+
+        System.out.println("TESTING OF THE CELLPHONE CLASS (CONSTRUCTORS & METHODS)");
+        System.out.println("\n----------------------------------------------------------------------------------------------------\n");
+        System.out.println();
+        
+        //Creating 2 cellphones, one with a default constructor and one with the parameterized constructor.
+        CellPhone cellphone1 = new CellPhone();
+        CellPhone cellphone2 = new CellPhone(87634384, "Samsung", 2020, 900);
+  	
+        //Copy constructor test
+        System.out.println("TESTING THE COPY CONSTRUCTOR");
+        CellPhone copycellphone = new CellPhone(cellphone2, 48485759);
+        System.out.println(copycellphone);
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        System.out.println("********************************************************************************************************");
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        
+        //clone method test
+        System.out.println("TESTING THE CLONE METHOD");
+        System.out.println(cellphone2.clone());
+        
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        System.out.println("********************************************************************************************************");
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        
+        //getters and setters test
+        System.out.println("TESTING THE ACCESSOR AND MUTATOR METHODS");
+        System.out.print("get Brand of cellphone2 : "); 
+        System.out.println(cellphone2.getBrand());
+        System.out.print("get SerialNum of copycellphone : ");
+        System.out.println(copycellphone.getSerialNum());
+        System.out.print("get Year of cellphone 2 : ");
+        System.out.println(cellphone2.getYear());
+        System.out.print("get Price of cellphone2 : ");
+        System.out.println(cellphone2.getPrice());
+        System.out.println();
+        System.out.print("set Brand of cellphone2 to LG: ");
+        cellphone2.setBrand("LG");
+        System.out.println(cellphone2.toString());
+        System.out.print("set SerialNum of copycellphone to 89898989: ");
+        copycellphone.setSerialNum(89898989);
+        System.out.println(copycellphone.toString());
+        System.out.print("set Year of cellphone 2 to 2022: ");
+        cellphone2.setYear(2022);
+        System.out.println(cellphone2.toString());
+        System.out.print("set Price of cellphone2 to 1000$: ");
+        cellphone2.setPrice(1000);
+        System.out.println(cellphone2.toString());
+        
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        System.out.println("********************************************************************************************************");
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        
+        System.out.println("TESTING THE EQUAL METHOD WITH CELLPHONE 2 AND COPYCELLPHONE");
+        //equals method test
+        
+        System.out.println(cellphone2.equals(copycellphone));
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        System.out.println("********************************************************************************************************");
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        
+        System.out.println("TESTING THE TOSTRING METHOD OF THE COPYCELLPHONE");
+        //to string method
+        
+       System.out.println(copycellphone.toString());
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        System.out.println("********************************************************************************************************");
+        System.out.println("----------------------------------------------------------------------------------------------------");
+        System.out.println();
+        System.out.println("Thank you for using this program!");
+	}
+
+		/**
+		 * This is the display method which displays the content of CellPhone Lists
+		 * @param CellList This is the list to be displayed 
+		 * @param List This is the name of the list to be displayed
+		 */
+	   public static void display(CellList CellList, String List) {
+	        System.out.println("\n~~~~ Displaying content of Cellphone Lists ~~~~");
+	        System.out.println(List + ": ");
+	        CellList.showContents();
+	        System.out.println();
+	    }
+	   
+	   /**
+	    * This is the add method which adds a CellPhone to a CellList
+	    * @param cellList This is the CellList which will add the CellPhone at its starting position
+	    * @param NewCellPhone This is the CellPhone to be added at the front of the list
+	    */
+	   public static void add(CellList cellList, CellPhone NewCellPhone) {
+		   System.out.println("This will test the method addToStart().");
+		   cellList.addToStart(NewCellPhone);
+	   }
+	   
+	   /**
+	    * This is the deleteIndex method which deletes a cellphone at the beginning of a celllist
+	    * @param CL This is the cellList
+	    * @param New This is a cellphone
+	    */
+	   
+	   public static void deleteIndex(CellList CL, CellPhone New) {
+		   System.out.println("This will test the method deleteFromIndex() at index 1.");
+		   CL.deleteFromIndex(1);
+	   }
+	   
+	   /**
+	    * This is the deleteStart method which will delete the first cellphone of a cellList
+	    * @param CL This is a cellList
+	    * @param New This is a cellPhone
+	    */
+	   
+	   public static void deleteStart(CellList CL, CellPhone New) {
+		   System.out.println("This will test the method deleteFromStart.");
+		   CL.deleteFromStart();
+	   }
+	   
+	   /**
+	    * This is the find_method which will try to find if a serial number is part of a cellList
+	    * @param CL This is a cellList
+	    * @param New This is a cellPhone
+	    */
+	   public static void find_method (CellList CL, CellPhone New) {
+		   System.out.println("This will test the method find().");
+		   CL.find(New.getSerialNum());
+	   }
+	   
+	   /**
+	    * This is the contains_method which verifies if a cellList contains a specific cellPhone
+	    * @param CL This is a cellList
+	    * @param New This is a cellPhone
+	    */
+	   public static void contains_method(CellList CL, CellPhone New) {
+		   System.out.println("This will test the contains() method.");
+		   CL.contains(New.getSerialNum());
+	   }
+	   
+	   /**
+	    * This is the showContents method which shows the contents of a cellList
+	    * @param CL This is a cellList
+	    * @param New This is a cellPhone
+	    */
+	   
+	   public static void showContents(CellList CL, CellPhone New) {
+		   System.out.println("This will test the showContents() method.");
+		   CL.showContents();
+	   }
+	   
+	   /**
+	    * This is the find_item_serial method which try to find a specific serial number from a CellList
+	    * @param serialNum This is the CellPhone's serial number
+	    * @param cellList This is the cellList
+	    */
+	   
+	   public static void find_item_serial(long serialNum, CellList cellList) {
+		  
+		   CellList.CellNode tempNode = null;
+	        System.out.println("\n ---------- Find Item By Serial# Test ---------- ");
+	        if (!cellList.contains(serialNum)) {
+	            System.out.println("There is no cellphone with Serial Num # " + serialNum);
+	        } 
+	        
+	        
+	        else {
+	        	tempNode = cellList.find(serialNum);
+	            System.out.println("Cellphone with Serial Num # " + serialNum + " has been found:"
+	                    + tempNode.getCellphone().toString());
+	        }
+	        System.out.println();
+	   }
+	   
+	   /**
+	    * This is the replace_index method which replaces an item at a specific index in the cellList
+	    * @param cellList This is a cellList
+	    * @param tempCellPhone This is a CellPhone
+	    * @param index This is the index at which the item should be replaced
+	    */
+	   
+	   public static void replace_index(CellList cellList, CellPhone tempCellPhone, int index) {
+	        System.out.println("This will test the replaceAtIndex() method.");
+	        System.out.print(" Replacing index " + index + " with item: " + tempCellPhone.toString() + " to the list.");
+	        cellList.replaceAtIndex(tempCellPhone, index);
+	        System.out.println();
+	    }
+
+	   /**
+	    * This is the equal_test method which check for equality between two CellLists.
+	    * @param cellList1 This is a cellList
+	    * @param cellList2 This is another cellList which is compared to the first one
+	    */
+	   public static void equal_test(CellList cellList1, CellList cellList2) {
+	        System.out.println("\n<<<<< Testing Equals Function of CellList class >>>>>");
+	        System.out.println();
+	        if (cellList1.equals(cellList2))
+	            System.out.println("Two lists are exactly the same");
+	        else {
+	            System.out.println("Two lists are different");
+	        }
+	       
+	    }
+
+
+}
